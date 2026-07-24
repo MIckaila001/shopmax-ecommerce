@@ -1,0 +1,86 @@
+# ============================================
+# ShopMax - .gitignore complet
+# ============================================
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.pnpm-store/
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Production / Local secrets
+*.local
+*.local.json
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+backend.log
+frontend.log
+
+# Misc
+.DS_Store
+Thumbs.db
+*.pem
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# .NET / C#
+bin/
+obj/
+*.user
+*.suo
+.vs/
+appsettings.Development.json
+appsettings.Local.json
+*.pdb
+*.dll
+*.exe
+!*.exe.cmd
+
+# Testing
+.nyc_output
+*.lcov
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+ehthumbs.db
+Desktop.ini
+
+# Temporary
+tmp/
+temp/
+.cache/
+.parcel-cache/
+.eslintcache
+
+# PostgreSQL
+*.sql.bak
+
+# Uploads
+uploads/
+public/uploads/
