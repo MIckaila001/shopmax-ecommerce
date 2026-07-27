@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <linearGradient id="creamJar" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#f5f5f5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e0e0e0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="#fafafa"/>
+  <!-- Jar body (cylinder) -->
+  <ellipse cx="300" cy="200" rx="120" ry="20" fill="url(#creamJar)"/>
+  <rect x="180" y="200" width="240" height="240" fill="url(#creamJar)"/>
+  <ellipse cx="300" cy="440" rx="120" ry="20" fill="#d0d0d0"/>
+  <!-- Lid -->
+  <ellipse cx="300" cy="190" rx="125" ry="22" fill="#F5B400"/>
+  <ellipse cx="300" cy="190" rx="120" ry="18" fill="#FFD54F"/>
+  <!-- Label -->
+  <rect x="200" y="240" width="200" height="160" fill="#fff"/>
+  <text x="300" y="280" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#0a0a0a" text-anchor="middle">SHOPMAX</text>
+  <text x="300" y="305" font-family="Arial" font-size="11" fill="#666" text-anchor="middle">SKINCARE</text>
+  <!-- Cream illustration -->
+  <circle cx="300" cy="345" r="30" fill="#FFE4B5"/>
+  <ellipse cx="290" cy="335" rx="10" ry="6" fill="#fff" opacity="0.6"/>
+  <text x="300" y="390" font-family="Arial" font-size="10" font-weight="bold" fill="#333" text-anchor="middle">CREME HYDRATANTE</text>
+  <text x="300" y="403" font-family="Arial" font-size="9" fill="#666" text-anchor="middle">50ml - Tous types de peau</text>
+  <!-- Shadow -->
+  <ellipse cx="300" cy="470" rx="130" ry="8" fill="#000" opacity="0.15"/>
+</svg>

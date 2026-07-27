@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <linearGradient id="coffeeBag" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3E2723;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#5D4037;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3E2723;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="#fafafa"/>
+  <!-- Coffee bag main body -->
+  <path d="M 200 180 L 400 180 L 420 220 L 420 470 L 380 490 L 220 490 L 180 470 L 180 220 Z" fill="url(#coffeeBag)"/>
+  <!-- Top seal -->
+  <rect x="180" y="180" width="240" height="20" fill="#1B0F0A"/>
+  <line x1="200" y1="190" x2="400" y2="190" stroke="#0a0a0a" stroke-width="1"/>
+  <!-- Center label -->
+  <rect x="220" y="240" width="160" height="180" rx="5" fill="#F5B400"/>
+  <!-- Label content -->
+  <text x="300" y="285" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#3E2723" text-anchor="middle">SHOPMAX</text>
+  <text x="300" y="310" font-family="Georgia, serif" font-size="14" fill="#3E2723" text-anchor="middle">COFFEE</text>
+  <!-- Coffee bean icon -->
+  <g transform="translate(280, 330)">
+    <ellipse cx="20" cy="20" rx="18" ry="12" fill="#3E2723"/>
+    <path d="M 5 20 Q 20 15 35 20" fill="none" stroke="#F5B400" stroke-width="2"/>
+    <path d="M 5 20 Q 20 25 35 20" fill="none" stroke="#F5B400" stroke-width="2"/>
+  </g>
+  <text x="300" y="390" font-family="Arial" font-size="11" font-weight="bold" fill="#3E2723" text-anchor="middle">100% ARABICA</text>
+  <text x="300" y="408" font-family="Arial" font-size="10" fill="#3E2723" text-anchor="middle">Cameroun</text>
+  <!-- Bottom of bag -->
+  <path d="M 180 470 L 220 490 L 380 490 L 420 470 L 420 475 L 380 495 L 220 495 L 180 475 Z" fill="#1B0F0A"/>
+  <!-- Side text -->
+  <text x="180" y="460" font-family="Arial" font-size="8" fill="#F5B400" text-anchor="middle" transform="rotate(-90, 195, 450)">250g</text>
+  <!-- Brand -->
+  <text x="300" y="525" font-family="Arial" font-size="13" font-weight="bold" fill="#0a0a0a" text-anchor="middle">CAFE MOULU PREMIUM</text>
+  <text x="300" y="543" font-family="Arial" font-size="10" fill="#666" text-anchor="middle">Torrefaction artisanale</text>
+  <!-- Shadow -->
+  <ellipse cx="300" cy="500" rx="130" ry="6" fill="#000" opacity="0.15"/>
+</svg>

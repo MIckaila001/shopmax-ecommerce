@@ -4,7 +4,7 @@ import { ArrowRight, Truck, Shield, RefreshCw, Headphones, Star } from "lucide-r
 
 export const metadata = {
   title: "ShopMax - Shopping en ligne au Cameroun",
-  description: "Découvrez le meilleur du shopping en ligne au Cameroun. Électronique, mode, maison, beauté et plus.",
+  description: "Découvrez le meilleur du shopping en ligne au Cameroun.",
 };
 
 const CATEGORIES = [
@@ -16,15 +16,43 @@ const CATEGORIES = [
   { name: "Alimentation", slug: "alimentaire", count: 28, image: "/images/categories/alimentaire.jpg" },
 ];
 
-const FEATURED_PRODUCTS = [
-  { id: 1, name: "iPhone 15 Pro Max 256GB", brand: "Apple", price: 850000, oldPrice: 950000, rating: 4.8, reviews: 124, image: "/images/products/iphone.jpg", badge: "NEW" },
-  { id: 2, name: "Samsung Galaxy S24 Ultra", brand: "Samsung", price: 750000, oldPrice: 820000, rating: 4.7, reviews: 89, image: "/images/products/samsung.jpg", badge: "-9%" },
-  { id: 3, name: "AirPods Pro 2 USB-C", brand: "Apple", price: 195000, oldPrice: 220000, rating: 4.9, reviews: 256, image: "/images/products/airpods.jpg", badge: "-11%" },
-  { id: 4, name: "MacBook Air M3 15 pouces", brand: "Apple", price: 1450000, oldPrice: 1600000, rating: 4.9, reviews: 67, image: "/images/products/laptop.svg", badge: "NEW" },
-  { id: 5, name: "Nike Air Max 270 React", brand: "Nike", price: 95000, oldPrice: 120000, rating: 4.6, reviews: 178, image: "/images/products/sneakers.svg", badge: "-21%" },
-  { id: 6, name: "Apple Watch Series 9", brand: "Apple", price: 320000, oldPrice: 380000, rating: 4.8, reviews: 145, image: "/images/products/watch.svg", badge: "-16%" },
-  { id: 7, name: "Casque Sony WH-1000XM5", brand: "Sony", price: 280000, rating: 4.9, reviews: 203, image: "/images/products/headphones.svg", badge: null },
-  { id: 8, name: "iPad Air M2 11 pouces", brand: "Apple", price: 580000, rating: 4.7, reviews: 98, image: "/images/products/tablette.svg", badge: "NEW" },
+// 24 produits répartis dans toutes les catégories
+const PRODUCTS = [
+  // Électronique (8)
+  { id: 1, name: "iPhone 15 Pro Max 256GB", brand: "Apple", price: 850000, oldPrice: 950000, rating: 4.8, reviews: 124, image: "/images/products/iphone.jpg", badge: "NEW", category: "telephones" },
+  { id: 2, name: "Samsung Galaxy S24 Ultra", brand: "Samsung", price: 750000, oldPrice: 820000, rating: 4.7, reviews: 89, image: "/images/products/samsung.jpg", badge: "-9%", category: "telephones" },
+  { id: 3, name: "AirPods Pro 2 USB-C", brand: "Apple", price: 195000, oldPrice: 220000, rating: 4.9, reviews: 256, image: "/images/products/airpods.jpg", badge: "-11%", category: "telephones" },
+  { id: 4, name: "MacBook Air M3 15 pouces", brand: "Apple", price: 1450000, oldPrice: 1600000, rating: 4.9, reviews: 67, image: "/images/products/laptop.svg", badge: "NEW", category: "telephones" },
+  { id: 5, name: "iPad Air M2 11 pouces", brand: "Apple", price: 580000, rating: 4.7, reviews: 98, image: "/images/products/tablette.svg", badge: "NEW", category: "telephones" },
+  { id: 6, name: "PlayStation 5 Slim", brand: "Sony", price: 480000, oldPrice: 520000, rating: 4.9, reviews: 312, image: "/images/products/ps5.svg", badge: "-8%", category: "telephones" },
+  { id: 7, name: "Canon EOS R6 Mark II", brand: "Canon", price: 1850000, rating: 4.8, reviews: 45, image: "/images/products/camera.svg", badge: "NEW", category: "telephones" },
+  { id: 8, name: "Smart TV 4K 55 pouces", brand: "Samsung", price: 420000, oldPrice: 480000, rating: 4.6, reviews: 156, image: "/images/products/tv.svg", badge: "-13%", category: "telephones" },
+
+  // Mode (5)
+  { id: 9, name: "Nike Air Max 270 React", brand: "Nike", price: 95000, oldPrice: 120000, rating: 4.6, reviews: 178, image: "/images/products/sneakers.svg", badge: "-21%", category: "mode" },
+  { id: 10, name: "Robe Africaine Élégante", brand: "ShopMax Couture", price: 35000, oldPrice: 45000, rating: 4.8, reviews: 89, image: "/images/products/dress.svg", badge: "-22%", category: "mode" },
+  { id: 11, name: "Veste à Capuche Premium", brand: "Urban Style", price: 28000, rating: 4.5, reviews: 67, image: "/images/products/jacket.svg", badge: "NEW", category: "mode" },
+  { id: 12, name: "Sac à Main en Cuir", brand: "Luxury Bag", price: 42000, oldPrice: 55000, rating: 4.7, reviews: 134, image: "/images/products/bag.svg", badge: "-24%", category: "mode" },
+  { id: 13, name: "Apple Watch Series 9", brand: "Apple", price: 320000, oldPrice: 380000, rating: 4.8, reviews: 145, image: "/images/products/watch.svg", badge: "-16%", category: "mode" },
+
+  // Beauté (3)
+  { id: 14, name: "Eau de Parfum ShopMax", brand: "ShopMax Beauty", price: 18500, oldPrice: 25000, rating: 4.9, reviews: 234, image: "/images/products/perfume.svg", badge: "-26%", category: "beaute" },
+  { id: 15, name: "Crème Hydratante Visage", brand: "Natural Care", price: 12000, rating: 4.6, reviews: 167, image: "/images/products/cleanser.svg", badge: null, category: "beaute" },
+  { id: 16, name: "Casque Sony WH-1000XM5", brand: "Sony", price: 280000, rating: 4.9, reviews: 203, image: "/images/products/headphones.svg", badge: null, category: "beaute" },
+
+  // Maison (2)
+  { id: 17, name: "Lampe de Table LED Design", brand: "HomeLight", price: 15000, oldPrice: 22000, rating: 4.7, reviews: 78, image: "/images/products/lamp.svg", badge: "-32%", category: "maison" },
+  { id: 18, name: "Set de 3 Coussins Décoratifs", brand: "Deco Home", price: 18000, rating: 4.5, reviews: 56, image: "/images/products/lamp.svg", badge: "NEW", category: "maison" },
+
+  // Sport (2)
+  { id: 19, name: "Ballon de Football Taille 5", brand: "Adidas", price: 18000, oldPrice: 25000, rating: 4.8, reviews: 245, image: "/images/products/ball.svg", badge: "-28%", category: "sport" },
+  { id: 20, name: "Tapis de Yoga Premium", brand: "YogaLife", price: 22000, rating: 4.7, reviews: 134, image: "/images/products/ball.svg", badge: null, category: "sport" },
+
+  // Alimentation (4)
+  { id: 21, name: "Café Moulu Arabica 250g", brand: "Café Cameroun", price: 4500, oldPrice: 6000, rating: 4.9, reviews: 312, image: "/images/products/coffee.svg", badge: "-25%", category: "alimentaire" },
+  { id: 22, name: "Jus de Mangue Naturel 1L", brand: "Fruits du Cameroun", price: 2500, rating: 4.7, reviews: 189, image: "/images/products/juice.svg", badge: null, category: "alimentaire" },
+  { id: 23, name: "Riz Basmati 5kg Premium", brand: "ShopMax Grocery", price: 8500, oldPrice: 10000, rating: 4.6, reviews: 98, image: "/images/products/coffee.svg", badge: "-15%", category: "alimentaire" },
+  { id: 24, name: "Huile de Palme Bio 1L", brand: "Terroir Local", price: 3500, rating: 4.8, reviews: 167, image: "/images/products/juice.svg", badge: null, category: "alimentaire" },
 ];
 
 function formatPrice(price: number): string {
@@ -36,7 +64,9 @@ function getDiscount(oldPrice: number, price: number): number {
 }
 
 export default function HomePage() {
-  const todayDeals = FEATURED_PRODUCTS.filter((p) => p.oldPrice);
+  const todayDeals = PRODUCTS.filter((p) => p.oldPrice).slice(0, 8);
+  const trending = PRODUCTS.slice(0, 8);
+  const newArrivals = PRODUCTS.filter((p) => p.badge === "NEW").slice(0, 4);
 
   return (
     <div>
@@ -53,8 +83,8 @@ export default function HomePage() {
                 <span className="text-primary">shopping en ligne</span>
               </h1>
               <p className="mt-6 text-lg text-gray-600 max-w-lg">
-                Des produits de qualité, au meilleur prix. Livraison rapide et
-                paiement sécurisé partout au Cameroun.
+                Plus de 400 produits, des prix imbattables. Livraison rapide et
+                paiement Mobile Money partout au Cameroun.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -67,7 +97,7 @@ export default function HomePage() {
                   href="/promotions"
                   className="inline-flex items-center justify-center rounded-md text-sm font-semibold border border-gray-300 px-6 py-3 hover:bg-gray-50 transition"
                 >
-                  Voir les offres
+                  Voir les promos
                 </Link>
               </div>
 
@@ -109,23 +139,16 @@ export default function HomePage() {
           <div className="flex justify-between items-end mb-8">
             <div>
               <h2 className="text-3xl font-bold">Catégories populaires</h2>
-              <p className="text-gray-500 mt-1">Explorez nos univers</p>
+              <p className="text-gray-500 mt-1">Explorez nos 6 univers</p>
             </div>
-            <Link
-              href="/categories"
-              className="text-sm font-semibold text-primary hover:underline flex items-center gap-1"
-            >
+            <Link href="/categories" className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
               Voir tout <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {CATEGORIES.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/categories/${cat.slug}`}
-                className="group"
-              >
+              <Link key={cat.slug} href={`/categories/${cat.slug}`} className="group">
                 <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 relative">
                   <Image
                     src={cat.image}
@@ -139,9 +162,7 @@ export default function HomePage() {
                   <p className="font-semibold text-sm group-hover:text-primary transition-colors">
                     {cat.name}
                   </p>
-                  <p className="text-xs text-gray-500">
-                    {cat.count} produits
-                  </p>
+                  <p className="text-xs text-gray-500">{cat.count} produits</p>
                 </div>
               </Link>
             ))}
@@ -156,22 +177,16 @@ export default function HomePage() {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <h2 className="text-3xl font-bold">Offres du jour</h2>
-                <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                  HOT
-                </span>
+                <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">HOT</span>
               </div>
-              <p className="text-gray-500">
-                Profitez de nos meilleurs prix avant la fin du compte à rebours
-              </p>
+              <p className="text-gray-500">Profitez de nos meilleurs prix avant la fin du compte à rebours</p>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Fin de l&apos;offre dans :</span>
+              <span className="text-sm text-gray-500">Fin dans :</span>
               <div className="flex gap-1">
                 {["08", "45", "32"].map((val, i) => (
-                  <div key={i} className="bg-dark text-white px-3 py-2 rounded-md font-mono font-bold">
-                    {val}
-                  </div>
+                  <div key={i} className="bg-dark text-white px-3 py-2 rounded-md font-mono font-bold">{val}</div>
                 ))}
               </div>
             </div>
@@ -185,24 +200,45 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PRODUITS VEDETTES */}
+      {/* NOUVEAUTÉS */}
       <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-end mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <h2 className="text-3xl font-bold">Nouveautés</h2>
+                <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">NEW</span>
+              </div>
+              <p className="text-gray-500 mt-1">Les derniers produits ajoutés</p>
+            </div>
+            <Link href="/boutique" className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
+              Voir tout <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {newArrivals.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TENDANCES */}
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-end mb-8">
             <div>
               <h2 className="text-3xl font-bold">Tendances du moment</h2>
               <p className="text-gray-500 mt-1">Les produits les plus populaires</p>
             </div>
-            <Link
-              href="/boutique"
-              className="text-sm font-semibold text-primary hover:underline flex items-center gap-1"
-            >
+            <Link href="/boutique" className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
               Voir tout <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {FEATURED_PRODUCTS.map((product) => (
+            {trending.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -246,7 +282,7 @@ export default function HomePage() {
   );
 }
 
-function ProductCard({ product }: { product: typeof FEATURED_PRODUCTS[number] }) {
+function ProductCard({ product }: { product: typeof PRODUCTS[number] }) {
   const discount = product.oldPrice ? getDiscount(product.oldPrice, product.price) : 0;
 
   return (
@@ -262,9 +298,7 @@ function ProductCard({ product }: { product: typeof FEATURED_PRODUCTS[number] })
         {product.badge && (
           <span
             className={`absolute top-2 left-2 px-2 py-1 rounded text-xs font-bold ${
-              product.badge === "NEW"
-                ? "bg-green-500 text-white"
-                : "bg-red-500 text-white"
+              product.badge === "NEW" ? "bg-green-500 text-white" : "bg-red-500 text-white"
             }`}
           >
             {product.badge}
@@ -288,9 +322,7 @@ function ProductCard({ product }: { product: typeof FEATURED_PRODUCTS[number] })
               <Star
                 key={i}
                 className={`h-3.5 w-3.5 ${
-                  i < Math.floor(product.rating)
-                    ? "fill-primary text-primary"
-                    : "fill-gray-200 text-gray-200"
+                  i < Math.floor(product.rating) ? "fill-primary text-primary" : "fill-gray-200 text-gray-200"
                 }`}
               />
             ))}

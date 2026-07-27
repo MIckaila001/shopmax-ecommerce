@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <rect width="600" height="600" fill="#fafafa"/>
+  <!-- Camera body -->
+  <rect x="150" y="220" width="300" height="200" rx="15" fill="#1a1a1a"/>
+  <!-- Top viewfinder hump -->
+  <rect x="250" y="200" width="100" height="30" rx="5" fill="#1a1a1a"/>
+  <!-- Lens outer -->
+  <circle cx="300" cy="330" r="80" fill="#0a0a0a"/>
+  <circle cx="300" cy="330" r="75" fill="#2a2a2a"/>
+  <!-- Lens inner -->
+  <circle cx="300" cy="330" r="60" fill="#0a0a0a"/>
+  <circle cx="300" cy="330" r="50" fill="#1a1a1a"/>
+  <!-- Lens glass reflection -->
+  <circle cx="280" cy="310" r="15" fill="#fff" opacity="0.2"/>
+  <circle cx="320" cy="350" r="8" fill="#fff" opacity="0.15"/>
+  <!-- Canon-style red ring -->
+  <circle cx="300" cy="330" r="78" fill="none" stroke="#cc0000" stroke-width="2"/>
+  <!-- Brand text -->
+  <text x="200" y="260" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">Canon</text>
+  <!-- Shutter button -->
+  <circle cx="350" cy="220" r="8" fill="#F5B400"/>
+  <!-- Mode dial -->
+  <circle cx="180" cy="260" r="15" fill="#424242"/>
+  <!-- Flash -->
+  <rect x="260" y="210" width="80" height="15" rx="3" fill="#424242"/>
+  <!-- Strap mounts -->
+  <circle cx="160" cy="240" r="6" fill="#616161"/>
+  <circle cx="440" cy="240" r="6" fill="#616161"/>
+  <!-- Model text -->
+  <text x="300" y="395" font-family="Arial" font-size="11" fill="#666" text-anchor="middle">EOS R6 Mark II</text>
+  <!-- Shadow -->
+  <ellipse cx="300" cy="450" rx="160" ry="8" fill="#000" opacity="0.1"/>
+</svg>
