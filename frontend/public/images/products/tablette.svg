@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <rect width="600" height="600" fill="#fafafa"/>
+  <!-- Tablet body -->
+  <rect x="150" y="120" width="300" height="380" rx="20" fill="#212121"/>
+  <rect x="160" y="130" width="280" height="360" rx="12" fill="#1a1a1a"/>
+  <!-- Screen content - colorful app grid -->
+  <rect x="170" y="140" width="260" height="340" rx="8" fill="#f5f5f5"/>
+  <!-- Status bar -->
+  <rect x="170" y="140" width="260" height="20" fill="#fff"/>
+  <text x="185" y="155" font-family="Arial" font-size="10" fill="#212121">9:41</text>
+  <!-- App grid -->
+  <g transform="translate(180, 180)">
+    <rect x="0" y="0" width="50" height="50" rx="10" fill="#F5B400"/>
+    <rect x="60" y="0" width="50" height="50" rx="10" fill="#ff6b6b"/>
+    <rect x="120" y="0" width="50" height="50" rx="10" fill="#4ecdc4"/>
+    <rect x="180" y="0" width="50" height="50" rx="10" fill="#95e1d3"/>
+    <rect x="0" y="60" width="50" height="50" rx="10" fill="#a8e6cf"/>
+    <rect x="60" y="60" width="50" height="50" rx="10" fill="#ffd3b6"/>
+    <rect x="120" y="60" width="50" height="50" rx="10" fill="#ffaaa5"/>
+    <rect x="180" y="60" width="50" height="50" rx="10" fill="#ff8b94"/>
+  </g>
+  <!-- Home indicator -->
+  <rect x="270" y="480" width="60" height="4" rx="2" fill="#757575"/>
+  <!-- Camera -->
+  <circle cx="300" cy="135" r="3" fill="#424242"/>
+  <!-- Shadow -->
+  <ellipse cx="300" cy="520" rx="160" ry="8" fill="#000" opacity="0.1"/>
+</svg>

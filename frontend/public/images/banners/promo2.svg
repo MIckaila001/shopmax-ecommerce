@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
+  <defs>
+    <linearGradient id="bannerGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0A0A0A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="url(#bannerGrad2)"/>
+  <!-- Yellow accent shapes -->
+  <circle cx="50" cy="50" r="20" fill="#F5B400"/>
+  <circle cx="1150" cy="350" r="30" fill="#F5B400" opacity="0.6"/>
+  <!-- Text -->
+  <text x="600" y="140" font-family="Arial, sans-serif" font-size="42" font-weight="900" fill="#F5B400" text-anchor="middle">SHOPMAX EXCLUSIF</text>
+  <text x="600" y="200" font-family="Arial, sans-serif" font-size="64" font-weight="900" fill="#fff" text-anchor="middle">PAIEMENT MOBILE MONEY</text>
+  <text x="600" y="240" font-family="Arial, sans-serif" font-size="20" fill="#fff" text-anchor="middle" opacity="0.9">MTN MoMo - Orange Money - Paiement a la livraison</text>
+  <!-- Payment logos -->
+  <g transform="translate(400, 280)">
+    <!-- MTN -->
+    <rect x="0" y="0" width="120" height="60" rx="10" fill="#FFCC00"/>
+    <text x="60" y="38" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000" text-anchor="middle">MTN MoMo</text>
+    <!-- Orange -->
+    <rect x="140" y="0" width="120" height="60" rx="10" fill="#FF7900"/>
+    <text x="200" y="38" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#fff" text-anchor="middle">Orange Money</text>
+    <!-- Cash -->
+    <rect x="280" y="0" width="120" height="60" rx="10" fill="#10B981"/>
+    <text x="340" y="38" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">Cash livraison</text>
+  </g>
+</svg>
