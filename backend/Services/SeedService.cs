@@ -43,6 +43,13 @@ public class SeedService
                 await SeedAdmin();
             }
 
+            // 4. Promotions
+            if (!await _context.Promotions.AnyAsync())
+            {
+                _logger.LogInformation("🌱 Seeding des promotions...");
+                await SeedPromotions();
+            }
+
             _logger.LogInformation("✅ Seed terminé avec succès !");
         }
         catch (Exception ex)
@@ -272,5 +279,77 @@ public class SeedService
 
         _context.Users.Add(admin);
         await _context.SaveChangesAsync();
+    }
+
+    private async Task SeedPromotions()
+    {
+        var now = DateTime.UtcNow;
+        var products = await _context.Products.Take(8).ToListAsync();
+
+        // Banniere principale
+        var mainBanner = new Promotion
+        {
+            Title = "MEGA SOLDES D'ÉTÉ",
+            Subtitle = "Sur toute la collection Tech",
+            Description = "Profitez de -50% sur une sélection de produits high-tech. Offre limitée dans le temps.",
+            ImageUrl = "/images/banners/promo1.svg",
+            StartsAt = now,
+            EndsAt = now.AddHours(8).AddMinutes(45),
+            Type = "banner",
+            DiscountPercent = 50,
+            CtaText = "Découvrir",
+            CtaLink = "/promotions",
+            IsActive = true,
+        };
+
+        // Vente flash
+        var flashSale = new Promotion
+        {
+            Title = "PROMO TECH -30%",
+            Subtitle = "iPhone, Samsung, MacBook",
+            Description = "Ventes flash sur l'électronique. Quantités limitées.",
+            ImageUrl = "/images/banners/promo2.svg",
+            StartsAt = now,
+            EndsAt = now.AddDays(3).AddHours(12),
+            Type = "flash",
+            DiscountPercent = 30,
+            CtaText = "Voir la sélection",
+            CtaLink = "/categories/electronique",
+            IsActive = true,
+        };
+
+        // Livraison gratuite
+        var freeDelivery = new Promotion
+        {
+            Title = "LIVRAISON GRATUITE",
+            Subtitle = "Sur toute la première commande",
+            Description = "Utilisez le code BIENVENUE10 à la validation.",
+            ImageUrl = "/images/banners/promo1.svg",
+            StartsAt = now,
+            EndsAt = now.AddDays(30),
+            Type = "code",
+            DiscountPercent = 10,
+            Code = "BIENVENUE10",
+            CtaText = "En profiter",
+            CtaLink = "/inscription",
+            IsActive = true,
+        };
+
+        _context.Promotions.AddRange(mainBanner, flashSale, freeDelivery);
+        await _context.SaveChangesAsync();
+
+        // Lie les produits a la vente flash
+        if (products.Count >= 4)
+        {
+            var flashProducts = new List<PromotionProduct>
+            {
+                new() { PromotionId = flashSale.Id, ProductId = products[0].Id, SalePrice = products[0].Price * 0.7m, Stock = 8, Sold = 42 },
+                new() { PromotionId = flashSale.Id, ProductId = products[1].Id, SalePrice = products[1].Price * 0.75m, Stock = 3, Sold = 27 },
+                new() { PromotionId = flashSale.Id, ProductId = products[2].Id, SalePrice = products[2].Price * 0.65m, Stock = 15, Sold = 85 },
+                new() { PromotionId = flashSale.Id, ProductId = products[3].Id, SalePrice = products[3].Price * 0.7m, Stock = 5, Sold = 18 },
+            };
+            _context.PromotionProducts.AddRange(flashProducts);
+            await _context.SaveChangesAsync();
+        }
     }
 }

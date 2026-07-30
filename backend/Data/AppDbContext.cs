@@ -16,6 +16,8 @@ public class AppDbContext : DbContext
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<WishlistItem> Wishlist { get; set; }
+    public DbSet<Promotion> Promotions { get; set; }
+    public DbSet<PromotionProduct> PromotionProducts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,5 +77,26 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Order>()
             .Property(o => o.Total)
             .HasColumnType("decimal(18,2)");
+
+        // Promotions
+        modelBuilder.Entity<PromotionProduct>()
+            .HasOne(pp => pp.Promotion)
+            .WithMany(p => p.PromotionProducts)
+            .HasForeignKey(pp => pp.PromotionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PromotionProduct>()
+            .HasOne(pp => pp.Product)
+            .WithMany()
+            .HasForeignKey(pp => pp.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PromotionProduct>()
+            .Property(pp => pp.SalePrice)
+            .HasColumnType("decimal(18,2)");
+
+        // Index pour les requetes de promotions actives
+        modelBuilder.Entity<Promotion>()
+            .HasIndex(p => new { p.IsActive, p.StartsAt, p.EndsAt });
     }
 }

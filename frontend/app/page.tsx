@@ -1,6 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Truck, Shield, RefreshCw, Headphones, Star } from "lucide-react";
+import { Countdown } from "@/components/ui/countdown";
+import { PromoBanner } from "@/components/promo-banner";
+import { FlashSale } from "@/components/flash-sale";
 
 export const metadata = {
   title: "ShopMax - Shopping en ligne au Cameroun",
@@ -68,6 +71,8 @@ export default function HomePage() {
   const trending = PRODUCTS.slice(0, 8);
   const newArrivals = PRODUCTS.filter((p) => p.badge === "NEW").slice(0, 4);
 
+  // Date de fin pour la vente flash (24h a partir de maintenant)
+  const flashSaleEndsAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
   return (
     <div>
       {/* HERO */}
@@ -170,7 +175,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* OFFRES DU JOUR */}
+      {/* BANNIÈRE PROMO DYNAMIQUE */}
+      <section className="py-8">
+        <div className="container mx-auto px-4">
+          <PromoBanner />
+        </div>
+      </section>
+
+      {/* VENTES FLASH - Countdown temps réel */}
+      <FlashSale
+        endsAt={flashSaleEndsAt}
+        title="Ventes Flash"
+        subtitle="Offres limitées dans le temps - Stock limité"
+      />
+
+      {/* OFFRES DU JOUR - Avec countdown */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 gap-4">
@@ -182,13 +201,9 @@ export default function HomePage() {
               <p className="text-gray-500">Profitez de nos meilleurs prix avant la fin du compte à rebours</p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Fin dans :</span>
-              <div className="flex gap-1">
-                {["08", "45", "32"].map((val, i) => (
-                  <div key={i} className="bg-dark text-white px-3 py-2 rounded-md font-mono font-bold">{val}</div>
-                ))}
-              </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold text-gray-700">Fin dans :</span>
+              <Countdown endsAt={new Date(Date.now() + 8 * 60 * 60 * 1000 + 45 * 60 * 1000 + 32 * 1000).toISOString()} />
             </div>
           </div>
 
