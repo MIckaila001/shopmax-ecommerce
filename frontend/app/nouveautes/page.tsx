@@ -114,7 +114,7 @@ export default function NouveautesPage() {
                         }`}
                       />
                     ))}
-                    <span className="text-sm text-gray-500 ml-1">({featured.reviews} avis)</span>
+                    <span className="text-sm text-gray-500 ml-1">({featured.reviewsCount} avis)</span>
                   </div>
                   <p className="text-gray-600 mt-4">
                     Decouvrez ce nouveau produit qui revolutionne le marche. Qualite premium, design moderne, performances exceptionnelles.

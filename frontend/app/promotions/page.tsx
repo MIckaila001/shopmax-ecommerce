@@ -226,7 +226,7 @@ function ProductCard({ product }: { product: typeof mockProducts[number] }) {
           {[...Array(5)].map((_, i) => (
             <span key={i} className={i < Math.floor(product.rating) ? "text-primary" : "text-gray-300"}>★</span>
           ))}
-          <span className="text-xs text-gray-500 ml-1">({product.reviews})</span>
+          <span className="text-xs text-gray-500 ml-1">({product.reviewsCount})</span>
         </div>
         <div className="mt-3 flex items-baseline gap-2">
           <span className="text-lg font-bold text-dark">{formatPrice(product.price)}</span>
