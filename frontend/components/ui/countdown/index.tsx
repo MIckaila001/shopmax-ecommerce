@@ -1,135 +1,105 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface CountdownProps {
-  endsAt: string | Date;
+  endsAt: string;
   className?: string;
-  variant?: "default" | "compact" | "large";
-  onExpire?: () => void;
-  showLabels?: boolean;
+  compact?: boolean;
+}
+
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
 
 /**
- * Compte à rebours temps réel qui se met à jour chaque seconde.
- * @param endsAt - Date de fin (ISO string ou Date)
- * @param variant - default | compact | large
- * @param onExpire - Callback quand le temps est écoulé
+ * Compte a rebours simplifie et compatible Next.js 15
+ * - Utilise useEffect (correct en composant client)
+ * - Ne s'affiche qu'apres le mount cote client (evite l'hydratation)
+ * - Mise a jour chaque seconde
  */
-export function Countdown({
-  endsAt,
-  className = "",
-  variant = "default",
-  onExpire,
-  showLabels = true,
-}: CountdownProps) {
-  const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(endsAt));
-  const [isExpired, setIsExpired] = useState(false);
+export function Countdown({ endsAt, className = "", compact = false }: CountdownProps) {
+  // Pour eviter l'erreur d'hydratation, on n'affiche rien au premier render
+  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   useEffect(() => {
-    const targetDate = new Date(endsAt).getTime();
+    setMounted(true);
 
-    // Mise à jour immédiate
-    update();
-
-    // Mise à jour chaque seconde
-    const interval = setInterval(update, 1000);
-
-    function update() {
+    function calculate(): TimeLeft {
+      const target = new Date(endsAt).getTime();
       const now = Date.now();
-      const diff = targetDate - now;
+      const diff = Math.max(0, target - now);
 
-      if (diff <= 0) {
-        setIsExpired(true);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        clearInterval(interval);
-        onExpire?.();
-        return;
-      }
-
-      setTimeLeft(calculateTimeLeft(endsAt));
+      return {
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      };
     }
 
-    return () => clearInterval(interval);
-  }, [endsAt, onExpire]);
+    // Mise a jour immediate
+    setTimeLeft(calculate());
 
-  if (isExpired) {
+    // Puis chaque seconde
+    const interval = setInterval(() => {
+      setTimeLeft(calculate());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [endsAt]);
+
+  // Pendant le SSR ou le premier render, on affiche des zeros
+  // (evite l'erreur d'hydratation cote serveur/client)
+  if (!mounted) {
+    if (compact) {
+      return <span className={`font-mono text-sm ${className}`}>00:00:00</span>;
+    }
     return (
-      <div className={`text-red-500 font-semibold ${className}`}>
-        Offre expirée
+      <div className={`flex gap-1 ${className}`}>
+        <Block value="00" label="j" />
+        <Block value="00" label="h" />
+        <Block value="00" label="m" />
+        <Block value="00" label="s" />
       </div>
     );
   }
 
-  const { days, hours, minutes, seconds } = timeLeft;
-
-  // Variantes de style
-  if (variant === "compact") {
+  // Une fois cote client, on affiche le vrai countdown
+  if (compact) {
     return (
       <span className={`font-mono text-sm ${className}`}>
-        {String(hours).padStart(2, "0")}:
-        {String(minutes).padStart(2, "0")}:
-        {String(seconds).padStart(2, "0")}
+        {String(timeLeft.hours).padStart(2, "0")}:
+        {String(timeLeft.minutes).padStart(2, "0")}:
+        {String(timeLeft.seconds).padStart(2, "0")}
       </span>
     );
   }
 
-  if (variant === "large") {
-    return (
-      <div className={`flex gap-2 ${className}`}>
-        <TimeBlock value={days} label="jours" large />
-        <TimeBlock value={hours} label="h" large />
-        <TimeBlock value={minutes} label="min" large />
-        <TimeBlock value={seconds} label="sec" large />
-      </div>
-    );
-  }
-
-  // Default
   return (
     <div className={`flex gap-1 ${className}`}>
-      {days > 0 && <TimeBlock value={days} label="j" showLabel={showLabels} />}
-      <TimeBlock value={hours} label="h" showLabel={showLabels} />
-      <TimeBlock value={minutes} label="m" showLabel={showLabels} />
-      <TimeBlock value={seconds} label="s" showLabel={showLabels} />
+      {timeLeft.days > 0 && <Block value={String(timeLeft.days).padStart(2, "0")} label="j" />}
+      <Block value={String(timeLeft.hours).padStart(2, "0")} label="h" />
+      <Block value={String(timeLeft.minutes).padStart(2, "0")} label="m" />
+      <Block value={String(timeLeft.seconds).padStart(2, "0")} label="s" />
     </div>
   );
 }
 
-function TimeBlock({
-  value,
-  label,
-  large = false,
-  showLabel = true,
-}: {
-  value: number;
-  label: string;
-  large?: boolean;
-  showLabel?: boolean;
-}) {
-  const sizeClasses = large ? "min-w-[60px] py-3 px-2" : "min-w-[40px] py-1.5 px-1.5";
-  const valueClasses = large ? "text-2xl" : "text-sm";
-  const labelClasses = large ? "text-[10px]" : "text-[9px]";
-
+function Block({ value, label }: { value: string; label: string }) {
   return (
-    <div
-      className={`bg-dark text-white rounded-md font-mono font-bold text-center flex flex-col items-center justify-center ${sizeClasses}`}
-    >
-      <span className={valueClasses}>{String(value).padStart(2, "0")}</span>
-      {showLabel && <span className={`${labelClasses} text-gray-400 mt-0.5`}>{label}</span>}
+    <div className="bg-dark text-white rounded-md font-mono font-bold text-center flex flex-col items-center justify-center min-w-[40px] py-1.5 px-1.5">
+      <span className="text-sm">{value}</span>
+      <span className="text-[9px] text-gray-400 mt-0.5">{label}</span>
     </div>
   );
-}
-
-function calculateTimeLeft(endsAt: string | Date) {
-  const targetDate = new Date(endsAt).getTime();
-  const now = Date.now();
-  const diff = Math.max(0, targetDate - now);
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
-
-  return { days, hours, minutes, seconds };
 }
