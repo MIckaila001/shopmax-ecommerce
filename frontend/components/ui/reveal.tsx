@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ElementType } from "react";
 
 interface RevealProps {
   children: React.ReactNode;
   className?: string;
   stagger?: boolean;
   delay?: number;
-  as?: keyof React.JSX.IntrinsicElements;
+  as?: ElementType;
 }
 
 /**
@@ -21,7 +21,7 @@ export function Reveal({
   delay = 0,
   as: Component = "div",
 }: RevealProps) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export function Reveal({
 
   return (
     <Component
-      ref={ref as any}
+      ref={ref}
       className={classes}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
