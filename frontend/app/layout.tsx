@@ -12,6 +12,20 @@ export const metadata: Metadata = {
     "Découvrez le meilleur du shopping en ligne au Cameroun. Électronique, mode, maison, beauté et plus. Livraison rapide et paiement sécurisé.",
   keywords: "e-commerce, cameroun, shopping, mobile money, MTN, Orange Money",
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      {
+        url: "/icon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    apple: [
+      {
+        url: "/icon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -53,21 +67,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="ShopMax" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-
-        {/* Icons */}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/icons/icon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/icons/icon-16x16.png"
-        />
       </head>
       <body className="font-sans antialiased min-h-screen flex flex-col">
         <PWAProvider>
