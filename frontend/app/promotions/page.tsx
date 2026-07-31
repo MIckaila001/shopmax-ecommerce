@@ -6,8 +6,12 @@ import { Clock, Flame, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Countdown } from "@/components/ui/countdown";
 import { products as mockProducts } from "@/lib/data";
 import { formatPrice, getDiscountPercent } from "@/lib/utils";
+
+// Date de fin pour la promo (dans 2h45min - expire bientot)
+const PROMO_END_DATE = new Date(Date.now() + 2 * 60 * 60 * 1000 + 45 * 60 * 1000).toISOString();
 
 export default function PromotionsPage() {
   // Tous les produits en promo
@@ -29,17 +33,11 @@ export default function PromotionsPage() {
             Offres valables jusqu&apos;à épuisement des stocks.
           </p>
 
-          {/* Countdown */}
-          <div className="flex items-center justify-center gap-2 mt-6">
+          {/* Countdown - TEMPS REEL */}
+          <div className="flex items-center justify-center gap-2 mt-6 flex-wrap">
             <Clock className="h-4 w-4 text-gray-500" />
             <span className="text-sm text-gray-500">Fin des offres dans :</span>
-            <div className="flex gap-1">
-              {["02", "18", "45"].map((val, i) => (
-                <div key={i} className="bg-dark text-white px-3 py-1.5 rounded-md font-mono font-bold text-sm">
-                  {val}
-                </div>
-              ))}
-            </div>
+            <Countdown endsAt={PROMO_END_DATE} />
           </div>
         </div>
       </section>
