@@ -16,16 +16,39 @@ const navLinks = [
   { label: "Nouveautés", href: "/nouveautes" },
 ];
 
-// Suggestions de recherche (top produits)
+// Suggestions de recherche (top produits, organises par premiere lettre)
 const SEARCH_SUGGESTIONS = [
-  "iPhone 15 Pro",
-  "Samsung Galaxy",
+  // A
+  "AirPods Pro 2",
+  "Apple Watch Series 9",
+  // C
+  "Canon EOS R6",
+  "Casque Sony",
+  "Café Moulu",
+  // H
+  "Huile de Palme",
+  // I
+  "iPad Air M2",
+  "iPhone 15 Pro Max",
+  // J
+  "Jus de Mangue",
+  // L
+  "Lampe LED",
+  // M
+  "MacBook Air M3",
+  // N
   "Nike Air Max",
-  "MacBook",
-  "AirPods Pro",
+  // P
   "PlayStation 5",
-  "Apple Watch",
-  "Café Cameroun",
+  // R
+  "Robe Africaine",
+  "Riz Basmati",
+  // S
+  "Samsung Galaxy S24",
+  // T
+  "Tapis de Yoga",
+  // V
+  "Veste à Capuche",
 ];
 
 export function Header() {
@@ -49,7 +72,16 @@ export function Header() {
   }, []);
 
   const filteredSuggestions = SEARCH_SUGGESTIONS.filter(
-    (s) => s.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery.length > 0
+    (s) => {
+      if (searchQuery.length === 0) return false;
+      const query = searchQuery.toLowerCase();
+      const suggestion = s.toLowerCase();
+      // Priorite 1 : commence par la recherche
+      if (suggestion.startsWith(query)) return true;
+      // Priorite 2 : contient tous les mots de la recherche
+      const queryWords = query.split(" ").filter(w => w.length > 0);
+      return queryWords.every(word => suggestion.includes(word));
+    }
   ).slice(0, 5);
 
   function handleSearch(e: React.FormEvent) {

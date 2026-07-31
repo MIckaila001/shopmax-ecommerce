@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Star, Filter, X, ChevronDown } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Star, Filter, X, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,14 +16,25 @@ import { ErrorState } from "@/components/ui/error";
 import { formatPrice, getDiscountPercent } from "@/lib/utils";
 
 export function CategoryListing({ slug = "all" }: { slug?: string }) {
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams.get("search") || "";
+  const urlCategory = searchParams.get("category") || "";
+
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedStorage, setSelectedStorage] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(urlSearch);
   const [sortBy, setSortBy] = useState<"popularity" | "price-asc" | "price-desc" | "newest">("popularity");
   const [showFilters, setShowFilters] = useState(false);
+
+  // Synchroniser la recherche avec l'URL (quand on clique sur une suggestion)
+  useEffect(() => {
+    if (urlSearch) {
+      setSearch(urlSearch);
+    }
+  }, [urlSearch]);
 
   // Fetch depuis l'API
   const { data: apiProducts, isLoading, error, refetch } = useProducts({
@@ -42,7 +54,7 @@ export function CategoryListing({ slug = "all" }: { slug?: string }) {
   // Fallback : utilise les mocks si l'API ne répond pas
   const baseProducts = apiProducts && apiProducts.length > 0 ? apiProducts : mockProducts;
 
-  // Filtrage local (catégorie + en stock)
+  // Filtrage local (catégorie + en stock + recherche)
   const filteredProducts = useMemo(() => {
     let result = [...baseProducts];
 
@@ -54,8 +66,18 @@ export function CategoryListing({ slug = "all" }: { slug?: string }) {
       result = result.filter((p) => p.inStock);
     }
 
+    // Filtrage par recherche textuelle (fallback local)
+    if (search && search.trim().length > 0) {
+      const query = search.toLowerCase().trim();
+      const queryWords = query.split(" ").filter((w) => w.length > 0);
+      result = result.filter((p) => {
+        const haystack = `${p.name} ${p.brand} ${p.category}`.toLowerCase();
+        return queryWords.every((word) => haystack.includes(word));
+      });
+    }
+
     return result;
-  }, [baseProducts, category, slug, inStockOnly]);
+  }, [baseProducts, category, slug, inStockOnly, search]);
 
   const allBrands = useMemo(
     () => Array.from(new Set(baseProducts.map((p) => p.brand))).filter(Boolean),
@@ -181,13 +203,37 @@ export function CategoryListing({ slug = "all" }: { slug?: string }) {
         )}
 
         <div className="flex-1">
+          {/* Barre de recherche visible dans la page */}
+          <div className="mb-4">
+            <div className="relative max-w-xl">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Rechercher dans les produits..."
+                className="pl-10 h-11"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">
                 {category?.name || "Tous les produits"}
               </h1>
               <p className="text-sm text-gray-500 mt-1">
-                {filteredProducts.length} produits trouvés
+                {search
+                  ? `${filteredProducts.length} résultat${filteredProducts.length > 1 ? "s" : ""} pour "${search}"`
+                  : `${filteredProducts.length} produits trouvés`}
               </p>
             </div>
 
