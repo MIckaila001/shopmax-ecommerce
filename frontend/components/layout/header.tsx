@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Search, Heart, ShoppingCart, User, Menu, X, LogIn } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/lib/hooks/use-cart";
@@ -16,10 +16,48 @@ const navLinks = [
   { label: "Nouveautés", href: "/nouveautes" },
 ];
 
+// Suggestions de recherche (top produits)
+const SEARCH_SUGGESTIONS = [
+  "iPhone 15 Pro",
+  "Samsung Galaxy",
+  "Nike Air Max",
+  "MacBook",
+  "AirPods Pro",
+  "PlayStation 5",
+  "Apple Watch",
+  "Café Cameroun",
+];
+
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const { totalItems } = useCart();
   const { isAuthenticated, user } = useAuth();
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // Fermer les suggestions au clic dehors
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const filteredSuggestions = SEARCH_SUGGESTIONS.filter(
+    (s) => s.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery.length > 0
+  ).slice(0, 5);
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.location.href = `/boutique?search=${encodeURIComponent(searchQuery)}`;
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
@@ -35,21 +73,49 @@ export function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-1">
-            <span className="text-2xl font-bold tracking-tight">Shop</span>
+          <Link href="/" className="flex items-center gap-1 group">
+            <span className="text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">Shop</span>
             <span className="text-2xl font-extrabold text-primary">Max</span>
           </Link>
 
           {/* Search bar (desktop) */}
-          <div className="hidden md:flex flex-1 max-w-2xl">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                type="search"
-                placeholder="Rechercher un produit, une marque..."
-                className="pl-10 h-11 w-full"
-              />
-            </div>
+          <div className="hidden md:flex flex-1 max-w-2xl relative" ref={searchRef}>
+            <form onSubmit={handleSearch}>
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type="search"
+                  placeholder="Rechercher un produit, une marque..."
+                  className="pl-10 h-11 w-full pr-4"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                />
+              </div>
+            </form>
+
+            {/* Suggestions */}
+            {showSuggestions && filteredSuggestions.length > 0 && (
+              <div className="absolute top-full mt-1 w-full bg-white border rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+                {filteredSuggestions.map((suggestion) => (
+                  <Link
+                    key={suggestion}
+                    href={`/boutique?search=${encodeURIComponent(suggestion)}`}
+                    className="flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 border-b last:border-b-0 transition-colors"
+                    onClick={() => {
+                      setShowSuggestions(false);
+                      setSearchQuery(suggestion);
+                    }}
+                  >
+                    <Search className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm">{suggestion}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right actions */}
@@ -84,6 +150,17 @@ export function Header() {
               </Button>
             )}
 
+            {/* Mobile search */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setSearchOpen(!searchOpen)}
+              aria-label="Recherche"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+
             {/* Mobile menu trigger */}
             <Button
               variant="ghost"
@@ -112,18 +189,27 @@ export function Header() {
         </nav>
       </div>
 
+      {/* Mobile search bar */}
+      {searchOpen && (
+        <div className="md:hidden border-t bg-white p-4">
+          <form onSubmit={handleSearch} className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              type="search"
+              placeholder="Rechercher..."
+              className="pl-10 h-11 w-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+            />
+          </form>
+        </div>
+      )}
+
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t bg-white">
           <div className="container mx-auto px-4 py-4 space-y-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                type="search"
-                placeholder="Rechercher..."
-                className="pl-10 h-11 w-full"
-              />
-            </div>
             <nav className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <Link
