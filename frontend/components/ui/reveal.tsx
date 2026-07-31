@@ -7,7 +7,7 @@ interface RevealProps {
   className?: string;
   stagger?: boolean;
   delay?: number;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
 }
 
 /**
