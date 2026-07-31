@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 interface CountdownProps {
-  endsAt: string;
+  endsAt: string | Date;
   className?: string;
   compact?: boolean;
 }
