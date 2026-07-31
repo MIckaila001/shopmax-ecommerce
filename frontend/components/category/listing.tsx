@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { Suspense, useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -16,6 +16,14 @@ import { ErrorState } from "@/components/ui/error";
 import { formatPrice, getDiscountPercent } from "@/lib/utils";
 
 export function CategoryListing({ slug = "all" }: { slug?: string }) {
+  return (
+    <Suspense fallback={<Loading text="Chargement de la boutique..." />}>
+      <CategoryListingInner slug={slug} />
+    </Suspense>
+  );
+}
+
+function CategoryListingInner({ slug = "all" }: { slug?: string }) {
   const searchParams = useSearchParams();
   const urlSearch = searchParams.get("search") || "";
   const urlCategory = searchParams.get("category") || "";
