@@ -21,7 +21,6 @@ const CATEGORIES = [
 
 // 24 produits répartis dans toutes les catégories
 const PRODUCTS = [
-  // Électronique (8)
   { id: 1, name: "iPhone 15 Pro Max 256GB", brand: "Apple", price: 850000, oldPrice: 950000, rating: 4.8, reviews: 124, image: "/images/products/iphone.jpg", badge: "NEW", category: "telephones" },
   { id: 2, name: "Samsung Galaxy S24 Ultra", brand: "Samsung", price: 750000, oldPrice: 820000, rating: 4.7, reviews: 89, image: "/images/products/samsung.jpg", badge: "-9%", category: "telephones" },
   { id: 3, name: "AirPods Pro 2 USB-C", brand: "Apple", price: 195000, oldPrice: 220000, rating: 4.9, reviews: 256, image: "/images/products/airpods.jpg", badge: "-11%", category: "telephones" },
@@ -30,28 +29,18 @@ const PRODUCTS = [
   { id: 6, name: "PlayStation 5 Slim", brand: "Sony", price: 480000, oldPrice: 520000, rating: 4.9, reviews: 312, image: "/images/products/ps5.svg", badge: "-8%", category: "telephones" },
   { id: 7, name: "Canon EOS R6 Mark II", brand: "Canon", price: 1850000, rating: 4.8, reviews: 45, image: "/images/products/camera.svg", badge: "NEW", category: "telephones" },
   { id: 8, name: "Smart TV 4K 55 pouces", brand: "Samsung", price: 420000, oldPrice: 480000, rating: 4.6, reviews: 156, image: "/images/products/tv.svg", badge: "-13%", category: "telephones" },
-
-  // Mode (5)
   { id: 9, name: "Nike Air Max 270 React", brand: "Nike", price: 95000, oldPrice: 120000, rating: 4.6, reviews: 178, image: "/images/products/sneakers.svg", badge: "-21%", category: "mode" },
   { id: 10, name: "Robe Africaine Élégante", brand: "ShopMax Couture", price: 35000, oldPrice: 45000, rating: 4.8, reviews: 89, image: "/images/products/dress.svg", badge: "-22%", category: "mode" },
   { id: 11, name: "Veste à Capuche Premium", brand: "Urban Style", price: 28000, rating: 4.5, reviews: 67, image: "/images/products/jacket.svg", badge: "NEW", category: "mode" },
   { id: 12, name: "Sac à Main en Cuir", brand: "Luxury Bag", price: 42000, oldPrice: 55000, rating: 4.7, reviews: 134, image: "/images/products/bag.svg", badge: "-24%", category: "mode" },
   { id: 13, name: "Apple Watch Series 9", brand: "Apple", price: 320000, oldPrice: 380000, rating: 4.8, reviews: 145, image: "/images/products/watch.svg", badge: "-16%", category: "mode" },
-
-  // Beauté (3)
   { id: 14, name: "Eau de Parfum ShopMax", brand: "ShopMax Beauty", price: 18500, oldPrice: 25000, rating: 4.9, reviews: 234, image: "/images/products/perfume.svg", badge: "-26%", category: "beaute" },
   { id: 15, name: "Crème Hydratante Visage", brand: "Natural Care", price: 12000, rating: 4.6, reviews: 167, image: "/images/products/cleanser.svg", badge: null, category: "beaute" },
   { id: 16, name: "Casque Sony WH-1000XM5", brand: "Sony", price: 280000, rating: 4.9, reviews: 203, image: "/images/products/headphones.svg", badge: null, category: "beaute" },
-
-  // Maison (2)
   { id: 17, name: "Lampe de Table LED Design", brand: "HomeLight", price: 15000, oldPrice: 22000, rating: 4.7, reviews: 78, image: "/images/products/lamp.svg", badge: "-32%", category: "maison" },
   { id: 18, name: "Set de 3 Coussins Décoratifs", brand: "Deco Home", price: 18000, rating: 4.5, reviews: 56, image: "/images/products/lamp.svg", badge: "NEW", category: "maison" },
-
-  // Sport (2)
   { id: 19, name: "Ballon de Football Taille 5", brand: "Adidas", price: 18000, oldPrice: 25000, rating: 4.8, reviews: 245, image: "/images/products/ball.svg", badge: "-28%", category: "sport" },
   { id: 20, name: "Tapis de Yoga Premium", brand: "YogaLife", price: 22000, rating: 4.7, reviews: 134, image: "/images/products/ball.svg", badge: null, category: "sport" },
-
-  // Alimentation (4)
   { id: 21, name: "Café Moulu Arabica 250g", brand: "Café Cameroun", price: 4500, oldPrice: 6000, rating: 4.9, reviews: 312, image: "/images/products/coffee.svg", badge: "-25%", category: "alimentaire" },
   { id: 22, name: "Jus de Mangue Naturel 1L", brand: "Fruits du Cameroun", price: 2500, rating: 4.7, reviews: 189, image: "/images/products/juice.svg", badge: null, category: "alimentaire" },
   { id: 23, name: "Riz Basmati 5kg Premium", brand: "ShopMax Grocery", price: 8500, oldPrice: 10000, rating: 4.6, reviews: 98, image: "/images/products/coffee.svg", badge: "-15%", category: "alimentaire" },
@@ -71,13 +60,9 @@ export default function HomePage() {
   const trending = PRODUCTS.slice(0, 8);
   const newArrivals = PRODUCTS.filter((p) => p.badge === "NEW").slice(0, 4);
 
-  // Date de fin FIXE pour eviter l'erreur d'hydratation React (#418)
-  // Le composant Countdown calcule le temps restant cote client
-  // En utilisant une date ISO fixe, le serveur et le client generent le meme HTML
-  // (la date est calculee au build, pas au runtime)
+  // Date FIXE pour eviter l'erreur d'hydratation React (#418)
   const fixedEndDate = "2025-12-31T23:59:59.000Z";
-  const flashSaleEndsAt = fixedEndDate;
-  const dailyDealsEndsAt = fixedEndDate;
+
   return (
     <div>
       {/* HERO */}
@@ -189,7 +174,7 @@ export default function HomePage() {
 
       {/* VENTES FLASH - Countdown temps réel */}
       <FlashSale
-        endsAt={flashSaleEndsAt}
+        endsAt={fixedEndDate}
         title="Ventes Flash"
         subtitle="Offres limitées dans le temps - Stock limité"
       />
@@ -208,7 +193,7 @@ export default function HomePage() {
 
             <div className="flex items-center gap-3">
               <span className="text-sm font-semibold text-gray-700">Fin dans :</span>
-              <Countdown endsAt={dailyDealsEndsAt} />
+              <Countdown endsAt={fixedEndDate} />
             </div>
           </div>
 

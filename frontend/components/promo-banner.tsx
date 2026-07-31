@@ -21,16 +21,62 @@ interface PromoBannerProps {
   initialPromos?: Promo[];
 }
 
+// Fonction de fallback DEFINIE EN PREMIER (au top du fichier)
+// pour eviter l'erreur "Cannot access before initialization"
+function getFallbackPromos(): Promo[] {
+  // Date FIXE pour eviter l'erreur d'hydratation
+  // On utilise une date dans le futur lointain pour que le countdown marche
+  const fixedEndDate = "2025-12-31T23:59:59.000Z";
+  return [
+    {
+      id: 1,
+      title: "MEGA SOLDES D'ÉTÉ",
+      subtitle: "Sur toute la collection Mode",
+      description: "Profitez de remises exceptionnelles sur les marques les plus populaires.",
+      imageUrl: "/images/banners/promo1.svg",
+      endsAt: fixedEndDate,
+      ctaText: "Découvrir",
+      ctaLink: "/promotions",
+      discountPercent: 50,
+    },
+    {
+      id: 2,
+      title: "PROMO TECH -30%",
+      subtitle: "iPhone, Samsung, MacBook",
+      description: "Les meilleurs prix sur l'électronique haut de gamme.",
+      imageUrl: "/images/banners/promo2.svg",
+      endsAt: fixedEndDate,
+      ctaText: "Voir la sélection",
+      ctaLink: "/categories/telephones",
+      discountPercent: 30,
+    },
+    {
+      id: 3,
+      title: "LIVRAISON GRATUITE",
+      subtitle: "Sur toute la premiere commande",
+      description: "Utilisez le code BIENVENUE10 à la validation.",
+      imageUrl: "/images/banners/promo1.svg",
+      endsAt: fixedEndDate,
+      ctaText: "En profiter",
+      ctaLink: "/inscription",
+      discountPercent: 10,
+    },
+  ];
+}
+
 /**
- * Bannière promo avec countdown temps réel
+ * Banniere promo avec countdown temps reel
  * Recupere les promos depuis l'API backend
  */
-export function PromoBanner({ initialPromos = [] }: PromoBannerProps) {
-  const [promos, setPromos] = useState<Promo[]>(initialPromos);
+export function PromoBanner({ initialPromos }: PromoBannerProps = {}) {
+  // Utilise les promos initiales si fournies, sinon fallback
+  const [promos, setPromos] = useState<Promo[]>(
+    initialPromos && initialPromos.length > 0 ? initialPromos : getFallbackPromos()
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // false car on a deja les fallback promos
 
-  // Fetch promos from API
+  // Fetch promos from API - SEULEMENT si on n'a pas deja les promos
   useEffect(() => {
     async function loadPromos() {
       try {
@@ -42,16 +88,14 @@ export function PromoBanner({ initialPromos = [] }: PromoBannerProps) {
 
         if (res.ok) {
           const data = await res.json();
-          setPromos(data);
-        } else {
-          // Fallback sur les promos initiales
-          setPromos(getFallbackPromos());
+          if (data && data.length > 0) {
+            setPromos(data);
+          }
         }
+        // Si l'API echoue, on garde les fallback promos
       } catch (err) {
-        // API non dispo, fallback
-        setPromos(getFallbackPromos());
-      } finally {
-        setLoading(false);
+        // Erreur silencieuse, on garde les fallback promos
+        console.warn("API promotions indisponible, utilisation du fallback");
       }
     }
 
@@ -67,19 +111,13 @@ export function PromoBanner({ initialPromos = [] }: PromoBannerProps) {
     return () => clearInterval(interval);
   }, [promos.length]);
 
-  if (loading) {
-    return (
-      <div className="rounded-2xl overflow-hidden bg-gradient-to-r from-primary to-yellow-300 p-8 h-48 flex items-center justify-center">
-        <div className="animate-pulse text-dark font-semibold">Chargement des promos...</div>
-      </div>
-    );
-  }
-
   if (promos.length === 0) {
     return null;
   }
 
-  const current = promos[currentIndex];
+  // Securite : si currentIndex depasse la longueur, revenir a 0
+  const safeIndex = currentIndex >= promos.length ? 0 : currentIndex;
+  const current = promos[safeIndex];
 
   return (
     <div className="rounded-2xl overflow-hidden bg-gradient-to-r from-primary via-yellow-400 to-primary p-6 md:p-10 relative">
@@ -152,44 +190,4 @@ export function PromoBanner({ initialPromos = [] }: PromoBannerProps) {
       )}
     </div>
   );
-}
-
-function getFallbackPromos(): Promo[] {
-  // Fallback si l'API ne repond pas
-  const now = Date.now();
-  return [
-    {
-      id: 1,
-      title: "MEGA SOLDES D'ÉTÉ",
-      subtitle: "Sur toute la collection Mode",
-      description: "Profitez de remises exceptionnelles sur les marques les plus populaires.",
-      imageUrl: "/images/banners/promo1.svg",
-      endsAt: new Date(now + 8 * 60 * 60 * 1000 + 45 * 60 * 1000 + 32 * 1000).toISOString(),
-      ctaText: "Découvrir",
-      ctaLink: "/promotions",
-      discountPercent: 50,
-    },
-    {
-      id: 2,
-      title: "PROMO TECH -30%",
-      subtitle: "iPhone, Samsung, MacBook",
-      description: "Les meilleurs prix sur l'électronique haut de gamme.",
-      imageUrl: "/images/banners/promo2.svg",
-      endsAt: new Date(now + 3 * 24 * 60 * 60 * 1000 + 12 * 60 * 60 * 1000).toISOString(),
-      ctaText: "Voir la sélection",
-      ctaLink: "/categories/telephones",
-      discountPercent: 30,
-    },
-    {
-      id: 3,
-      title: "LIVRAISON GRATUITE",
-      subtitle: "Sur toute la premiere commande",
-      description: "Utilisez le code BIENVENUE10 à la validation.",
-      imageUrl: "/images/banners/promo1.svg",
-      endsAt: new Date(now + 30 * 24 * 60 * 60 * 1000).toISOString(),
-      ctaText: "En profiter",
-      ctaLink: "/inscription",
-      discountPercent: 10,
-    },
-  ];
 }
