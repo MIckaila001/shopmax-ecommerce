@@ -13,6 +13,10 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+const DISMISS_KEY = "shopmax-install-dismissed";
+const INSTALLED_KEY = "shopmax-install-accepted";
+const DISMISS_DAYS = 7; // Redemander apres 7 jours si l'utilisateur a ferme
+
 export function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
@@ -21,45 +25,84 @@ export function InstallPrompt() {
   const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
-    // Detecte si on est deja en mode app
+    // 1) Deja installe ?
     const standalone =
       window.matchMedia("(display-mode: standalone)").matches ||
-      (window.navigator as any).standalone === true;
+      (window.navigator as any).standalone === true ||
+      window.matchMedia("(display-mode: minimal-ui)").matches;
     setIsStandalone(standalone);
 
-    // Detecte iOS
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (standalone) return; // On est deja dans l'app, on n'affiche rien
+
+    // 2) Deja accepte ?
+    if (localStorage.getItem(INSTALLED_KEY) === "1") return;
+
+    // 3) Deja refuse recemment ?
+    const dismissedAt = localStorage.getItem(DISMISS_KEY);
+    if (dismissedAt) {
+      const elapsed = Date.now() - parseInt(dismissedAt, 10);
+      if (elapsed < DISMISS_DAYS * 24 * 60 * 60 * 1000) return;
+    }
+
+    // 4) Detecte iOS
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(iOS);
 
-    // Ecoute l'event beforeinstallprompt
+    // 5) Ecoute beforeinstallprompt (Android/Desktop)
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      // Affiche le prompt apres 5 secondes
+      // Affiche apres 5s
       setTimeout(() => setShowPrompt(true), 5000);
     };
 
     window.addEventListener("beforeinstallprompt", handler);
 
-    // Pour iOS, on peut montrer les instructions
-    if (iOS && !standalone) {
+    // 6) iOS : on montre les instructions apres 5s (pas de prompt natif)
+    if (iOS) {
       setTimeout(() => setShowPrompt(true), 5000);
     }
 
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    // 7) Ecoute l'event appinstalled pour memoriser
+    const installedHandler = () => {
+      localStorage.setItem(INSTALLED_KEY, "1");
+      setShowPrompt(false);
+      setDeferredPrompt(null);
+    };
+    window.addEventListener("appinstalled", installedHandler);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+      window.removeEventListener("appinstalled", installedHandler);
+    };
   }, []);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === "accepted") {
-      setShowPrompt(false);
+    try {
+      await deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        localStorage.setItem(INSTALLED_KEY, "1");
+        setShowPrompt(false);
+      } else {
+        // Refuse : on redemande dans 7 jours
+        localStorage.setItem(DISMISS_KEY, Date.now().toString());
+        setShowPrompt(false);
+      }
+    } catch (err) {
+      console.error("Install prompt error:", err);
+    } finally {
+      setDeferredPrompt(null);
     }
-    setDeferredPrompt(null);
   };
 
-  // Deja en mode app, on affiche pas
+  const handleDismiss = () => {
+    localStorage.setItem(DISMISS_KEY, Date.now().toString());
+    setShowPrompt(false);
+  };
+
+  // Ne rien afficher dans ces cas
   if (isStandalone) return null;
   if (!showPrompt) return null;
 
@@ -75,11 +118,11 @@ export function InstallPrompt() {
             <p className="text-xs text-gray-500 mt-0.5">
               {isIOS
                 ? "Appuyez sur Partager puis 'Sur l'écran d'accueil'"
-                : "Ajoutez l'app à votre écran d'accueil"}
+                : "Ajoutez l'app à votre écran d'accueil pour un accès rapide"}
             </p>
           </div>
           <button
-            onClick={() => setShowPrompt(false)}
+            onClick={handleDismiss}
             className="text-gray-400 hover:text-gray-600"
             aria-label="Fermer"
           >
@@ -87,16 +130,22 @@ export function InstallPrompt() {
           </button>
         </div>
 
-        {!isIOS && deferredPrompt && (
+        <div className="flex items-center gap-2 mt-3">
+          {!isIOS && deferredPrompt && (
+            <Button onClick={handleInstall} className="flex-1" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              Installer
+            </Button>
+          )}
           <Button
-            onClick={handleInstall}
-            className="w-full mt-3"
+            onClick={handleDismiss}
+            variant="ghost"
             size="sm"
+            className={!isIOS && deferredPrompt ? "" : "flex-1"}
           >
-            <Download className="h-4 w-4 mr-2" />
-            Installer maintenant
+            Plus tard
           </Button>
-        )}
+        </div>
       </div>
     </div>
   );
