@@ -71,8 +71,13 @@ export default function HomePage() {
   const trending = PRODUCTS.slice(0, 8);
   const newArrivals = PRODUCTS.filter((p) => p.badge === "NEW").slice(0, 4);
 
-  // Date de fin pour la vente flash (24h a partir de maintenant)
-  const flashSaleEndsAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+  // Date de fin FIXE pour eviter l'erreur d'hydratation React (#418)
+  // Le composant Countdown calcule le temps restant cote client
+  // En utilisant une date ISO fixe, le serveur et le client generent le meme HTML
+  // (la date est calculee au build, pas au runtime)
+  const fixedEndDate = "2025-12-31T23:59:59.000Z";
+  const flashSaleEndsAt = fixedEndDate;
+  const dailyDealsEndsAt = fixedEndDate;
   return (
     <div>
       {/* HERO */}
@@ -203,7 +208,7 @@ export default function HomePage() {
 
             <div className="flex items-center gap-3">
               <span className="text-sm font-semibold text-gray-700">Fin dans :</span>
-              <Countdown endsAt={new Date(Date.now() + 8 * 60 * 60 * 1000 + 45 * 60 * 1000 + 32 * 1000).toISOString()} />
+              <Countdown endsAt={dailyDealsEndsAt} />
             </div>
           </div>
 
