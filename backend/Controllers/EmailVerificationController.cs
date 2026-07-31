@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopMax.Data;
 using ShopMax.Models;
+using ShopMax.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 

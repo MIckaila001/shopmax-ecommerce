@@ -23,9 +23,9 @@ WORKDIR /app
 # Copier le build depuis l'etape precedente
 COPY --from=build /app/publish .
 
-# Railway injecte automatiquement la variable PORT
-# ASP.NET Core 8+ utilise ASPNETCORE_URLS pour definir le port
-ENV ASPNETCORE_URLS=http://+:$PORT
+# Railway injecte automatiquement la variable PORT au runtime
+# On utilise ${PORT:-8080} comme fallback si pas defini
+ENV ASPNETCORE_URLS=http://+:${PORT:-8080}
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 # Lancer l'application
