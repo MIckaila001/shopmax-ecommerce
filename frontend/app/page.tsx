@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Truck, Shield, RefreshCw, Headphones, Star, Zap } from "lucide-react";
+import { Countdown } from "@/components/ui/countdown";
+import { PromoBanner } from "@/components/promo-banner";
 
 export const metadata = {
   title: "ShopMax - Shopping en ligne au Cameroun",
@@ -42,6 +44,11 @@ const PRODUCTS = [
   { id: 23, name: "Riz Basmati 5kg Premium", brand: "ShopMax Grocery", price: 8500, oldPrice: 10000, rating: 4.6, reviews: 98, image: "/images/products/coffee.svg", badge: "-15%", category: "alimentaire" },
   { id: 24, name: "Huile de Palme Bio 1L", brand: "Terroir Local", price: 3500, rating: 4.8, reviews: 167, image: "/images/products/juice.svg", badge: null, category: "alimentaire" },
 ];
+
+// Dates de fin pour les countdowns (calculees une fois au build)
+// On utilise des dates proches pour que le countdown soit visible
+const FLASH_SALE_END = new Date(Date.now() + 23 * 60 * 60 * 1000).toISOString(); // 23h
+const DAILY_DEALS_END = new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString(); // 7h
 
 function formatPrice(price: number): string {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -158,15 +165,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* VENTES FLASH */}
+      {/* PROMOTIONS - Server Component avec 3 bannières */}
+      <section className="py-8">
+        <div className="container mx-auto px-4">
+          <PromoBanner />
+        </div>
+      </section>
+
+      {/* VENTES FLASH avec Countdown */}
       <section className="py-16 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
         <div className="container mx-auto px-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Zap className="h-6 w-6 text-red-500 fill-red-500" />
-            <h2 className="text-3xl font-bold text-dark">Ventes Flash</h2>
-            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">HOT</span>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Zap className="h-6 w-6 text-red-500 fill-red-500" />
+                <h2 className="text-3xl font-bold text-dark">Ventes Flash</h2>
+                <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">HOT</span>
+              </div>
+              <p className="text-gray-600">Offres limitées dans le temps</p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold text-gray-700">Fin dans :</span>
+              <Countdown endsAt={FLASH_SALE_END} />
+            </div>
           </div>
-          <p className="text-gray-600 mb-8">Offres limitées - Stock limité</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {todayDeals.slice(0, 4).map((product) => (
@@ -176,7 +199,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* OFFRES DU JOUR */}
+      {/* OFFRES DU JOUR avec Countdown compact */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 gap-4">
@@ -187,9 +210,11 @@ export default function HomePage() {
               </div>
               <p className="text-gray-500">Profitez de nos meilleurs prix</p>
             </div>
-            <Link href="/boutique" className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
-              Voir tout <ArrowRight className="h-4 w-4" />
-            </Link>
+
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold text-gray-700">Fin dans :</span>
+              <Countdown endsAt={DAILY_DEALS_END} compact />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

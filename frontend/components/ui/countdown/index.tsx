@@ -16,13 +16,12 @@ interface TimeLeft {
 }
 
 /**
- * Compte a rebours simplifie et compatible Next.js 15
- * - Utilise useEffect (correct en composant client)
- * - Ne s'affiche qu'apres le mount cote client (evite l'hydratation)
- * - Mise a jour chaque seconde
+ * Compte a rebours temps reel
+ * Utilise le pattern "mounted" pour eviter l'hydratation
+ * Le premier render affiche 00:00:00, puis se met a jour cote client
  */
 export function Countdown({ endsAt, className = "", compact = false }: CountdownProps) {
-  // Pour eviter l'erreur d'hydratation, on n'affiche rien au premier render
+  // Pour eviter l'erreur d'hydratation, on attend le mount cote client
   const [mounted, setMounted] = useState(false);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
@@ -47,10 +46,8 @@ export function Countdown({ endsAt, className = "", compact = false }: Countdown
       };
     }
 
-    // Mise a jour immediate
     setTimeLeft(calculate());
 
-    // Puis chaque seconde
     const interval = setInterval(() => {
       setTimeLeft(calculate());
     }, 1000);
@@ -58,26 +55,25 @@ export function Countdown({ endsAt, className = "", compact = false }: Countdown
     return () => clearInterval(interval);
   }, [endsAt]);
 
-  // Pendant le SSR ou le premier render, on affiche des zeros
-  // (evite l'erreur d'hydratation cote serveur/client)
+  // Pendant le SSR, on montre un placeholder
   if (!mounted) {
     if (compact) {
-      return <span className={`font-mono text-sm ${className}`}>00:00:00</span>;
+      return <span className={`font-mono text-sm text-gray-400 ${className}`}>--:--:--</span>;
     }
     return (
       <div className={`flex gap-1 ${className}`}>
-        <Block value="00" label="j" />
-        <Block value="00" label="h" />
-        <Block value="00" label="m" />
-        <Block value="00" label="s" />
+        <Block value="--" label="j" />
+        <Block value="--" label="h" />
+        <Block value="--" label="m" />
+        <Block value="--" label="s" />
       </div>
     );
   }
 
-  // Une fois cote client, on affiche le vrai countdown
+  // Cote client, on montre le vrai countdown
   if (compact) {
     return (
-      <span className={`font-mono text-sm ${className}`}>
+      <span className={`font-mono text-sm font-bold text-dark ${className}`}>
         {String(timeLeft.hours).padStart(2, "0")}:
         {String(timeLeft.minutes).padStart(2, "0")}:
         {String(timeLeft.seconds).padStart(2, "0")}
